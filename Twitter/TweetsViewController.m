@@ -10,8 +10,11 @@
 #import "User.h"
 #import "Tweet.h"
 #import "TwitterClient.h"
+#import "TweetCell.h"
 
-@interface TweetsViewController ()
+@interface TweetsViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) NSArray *tweets;
 
 @end
 
@@ -38,10 +41,25 @@
                                     action:@selector(onNew)
      ];
 
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.estimatedRowHeight = 150;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    [self.tableView setNeedsLayout];
+    [self.tableView layoutIfNeeded];
+
+    [self.tableView registerNib:[UINib nibWithNibName:@"TweetCell" bundle:nil]
+         forCellReuseIdentifier:@"TweetCell"];
+    
+    self.tweets = @[];
+
     [[TwitterClient sharedInstance] homeTimeLineWithParams:nil completion:^(NSArray *tweets, NSError *error) {
+        self.tweets = tweets;
+
         for (Tweet *tweet in tweets) {
-            NSLog(@"text: %@", tweet.text);
+            NSLog(@"%@", tweet.text);
         }
+        [self.tableView reloadData];
     }];
 }
 
@@ -57,6 +75,24 @@
 - (void)onNew {
     NSLog(@"New Tweet");
 }
+
+#pragma mark - Table view methods
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.tweets.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    TweetCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TweetCell"];
+
+    cell.tweet = self.tweets[indexPath.row];
+
+    return cell;
+}
+
+//- (void) tableView: (UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//}
+
 
 /*
 #pragma mark - Navigation

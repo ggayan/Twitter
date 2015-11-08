@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="121" id="KGk-i7-Jjw" customClass="TweetCell">
+            <rect key="frame" x="0.0" y="0.0" width="418" height="121"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="418" height="120.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="w8T-WO-yEj">
+                        <rect key="frame" x="8" y="8" width="73" height="73"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="73" id="S9c-Cv-XDl"/>
+                            <constraint firstAttribute="height" constant="73" id="zgG-ru-71j"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="4h" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wqi-oS-ALL">
+                        <rect key="frame" x="397" y="9" width="13" height="12"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <color key="textColor" red="0.39215686274509803" green="0.39215686274509803" blue="0.39215686274509803" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The tweet content" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0xK-OO-PMA">
+                        <rect key="frame" x="89" y="30" width="321" height="16"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Michael Moran" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0CB-0h-b6I">
+                        <rect key="frame" x="89" y="8" width="88.5" height="14.5"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="@TheMichaelMoran" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P9u-Qa-bvA">
+                        <rect key="frame" x="185" y="8" width="112.5" height="14.5"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.46034440445026181" green="0.46034440445026181" blue="0.46034440445026181" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <animations/>
+                <constraints>
+                    <constraint firstItem="0xK-OO-PMA" firstAttribute="top" secondItem="0CB-0h-b6I" secondAttribute="bottom" constant="8" id="4fo-LB-fcN"/>
+                    <constraint firstItem="w8T-WO-yEj" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="4su-jN-gDk"/>
+                    <constraint firstItem="0CB-0h-b6I" firstAttribute="leading" secondItem="w8T-WO-yEj" secondAttribute="trailing" constant="8" id="83X-4o-6tx"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="0xK-OO-PMA" secondAttribute="bottom" constant="8" id="OpX-L4-UPd"/>
+                    <constraint firstItem="0xK-OO-PMA" firstAttribute="leading" secondItem="w8T-WO-yEj" secondAttribute="trailing" constant="8" id="Rem-Pf-OfM"/>
+                    <constraint firstItem="Wqi-oS-ALL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="P9u-Qa-bvA" secondAttribute="trailing" constant="8" id="ZKV-Gu-QdJ"/>
+                    <constraint firstItem="w8T-WO-yEj" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="iph-BF-Nh1"/>
+                    <constraint firstItem="P9u-Qa-bvA" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="jkL-Dn-Uiv"/>
+                    <constraint firstAttribute="trailing" secondItem="Wqi-oS-ALL" secondAttribute="trailing" constant="8" id="pEz-ia-r3h"/>
+                    <constraint firstItem="Wqi-oS-ALL" firstAttribute="centerY" secondItem="P9u-Qa-bvA" secondAttribute="centerY" id="q4y-xR-DFX"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="w8T-WO-yEj" secondAttribute="bottom" constant="8" id="qmY-bW-SSh"/>
+                    <constraint firstAttribute="trailing" secondItem="0xK-OO-PMA" secondAttribute="trailing" constant="8" id="uef-ng-hEG"/>
+                    <constraint firstItem="0CB-0h-b6I" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="vye-nP-fiP"/>
+                    <constraint firstItem="P9u-Qa-bvA" firstAttribute="leading" secondItem="0CB-0h-b6I" secondAttribute="trailing" constant="8" id="wqZ-qE-e9b"/>
+                </constraints>
+            </tableViewCellContentView>
+            <animations/>
+            <connections>
+                <outlet property="contentLabel" destination="0xK-OO-PMA" id="RRK-4i-kbt"/>
+                <outlet property="dateLabel" destination="Wqi-oS-ALL" id="7E5-6d-JcE"/>
+                <outlet property="nameLabel" destination="0CB-0h-b6I" id="elB-qj-FqD"/>
+                <outlet property="profileImageView" destination="w8T-WO-yEj" id="YTL-bU-j6I"/>
+                <outlet property="screenNameLabel" destination="P9u-Qa-bvA" id="Gdi-SB-5Gr"/>
+            </connections>
+            <point key="canvasLocation" x="710" y="334.5"/>
+        </tableViewCell>
+    </objects>
+</document>
