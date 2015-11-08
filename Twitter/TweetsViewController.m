@@ -13,8 +13,10 @@
 #import "TweetCell.h"
 
 @interface TweetsViewController () <UITableViewDataSource, UITableViewDelegate>
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSArray *tweets;
+@property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 @end
 
@@ -50,17 +52,14 @@
 
     [self.tableView registerNib:[UINib nibWithNibName:@"TweetCell" bundle:nil]
          forCellReuseIdentifier:@"TweetCell"];
-    
+
+    self.refreshControl = [UIRefreshControl new];
+    [self.refreshControl addTarget:self action:@selector(onRefresh) forControlEvents:UIControlEventValueChanged];
+    [self.tableView insertSubview:self.refreshControl atIndex: 0];
+
     self.tweets = @[];
 
-    [[TwitterClient sharedInstance] homeTimeLineWithParams:nil completion:^(NSArray *tweets, NSError *error) {
-        self.tweets = tweets;
-
-        for (Tweet *tweet in tweets) {
-            NSLog(@"%@", tweet.text);
-        }
-        [self.tableView reloadData];
-    }];
+    [self fetchTweets];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -90,18 +89,16 @@
     return cell;
 }
 
-//- (void) tableView: (UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//}
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)onRefresh {
+    [self fetchTweets];
 }
-*/
+
+- (void)fetchTweets {
+    [[TwitterClient sharedInstance] homeTimeLineWithParams:nil completion:^(NSArray *tweets, NSError *error) {
+        self.tweets = tweets;
+        [self.tableView reloadData];
+        [self.refreshControl endRefreshing];
+    }];
+}
 
 @end
