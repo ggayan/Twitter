@@ -7,6 +7,7 @@
 //
 
 #import "TweetsViewController.h"
+#import "TweetViewController.h"
 #import "User.h"
 #import "Tweet.h"
 #import "TwitterClient.h"
@@ -88,6 +89,17 @@
 
     return cell;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    TweetViewController *tvc = [[TweetViewController alloc] initWithNibName:@"TweetViewController" bundle:nil];
+    tvc.tweet = self.tweets[indexPath.row];
+
+    [self.navigationController pushViewController:tvc animated:YES];
+}
+
+#pragma mark - Private methods
 
 - (void)onRefresh {
     [self fetchTweets];

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		240BA5411BEFF56200DA2984 /* TweetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 240BA53F1BEFF56200DA2984 /* TweetViewController.m */; };
+		240BA5421BEFF56200DA2984 /* TweetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 240BA5401BEFF56200DA2984 /* TweetViewController.xib */; };
 		243306631BEEC6D20004B308 /* TweetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 243306611BEEC6D20004B308 /* TweetsViewController.m */; };
 		243306641BEEC6D20004B308 /* TweetsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 243306621BEEC6D20004B308 /* TweetsViewController.xib */; };
 		2433066A1BEED89B0004B308 /* TweetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 243306681BEED89B0004B308 /* TweetCell.m */; };
@@ -24,6 +26,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		240BA53E1BEFF56200DA2984 /* TweetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TweetViewController.h; sourceTree = "<group>"; };
+		240BA53F1BEFF56200DA2984 /* TweetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TweetViewController.m; sourceTree = "<group>"; };
+		240BA5401BEFF56200DA2984 /* TweetViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TweetViewController.xib; sourceTree = "<group>"; };
 		243306601BEEC6D20004B308 /* TweetsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TweetsViewController.h; sourceTree = "<group>"; };
 		243306611BEEC6D20004B308 /* TweetsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TweetsViewController.m; sourceTree = "<group>"; };
 		243306621BEEC6D20004B308 /* TweetsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TweetsViewController.xib; sourceTree = "<group>"; };
@@ -73,6 +78,9 @@
 				243306601BEEC6D20004B308 /* TweetsViewController.h */,
 				243306611BEEC6D20004B308 /* TweetsViewController.m */,
 				243306621BEEC6D20004B308 /* TweetsViewController.xib */,
+				240BA53E1BEFF56200DA2984 /* TweetViewController.h */,
+				240BA53F1BEFF56200DA2984 /* TweetViewController.m */,
+				240BA5401BEFF56200DA2984 /* TweetViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -223,6 +231,7 @@
 			files = (
 				2433066B1BEED89B0004B308 /* TweetCell.xib in Resources */,
 				243306641BEEC6D20004B308 /* TweetsViewController.xib in Resources */,
+				240BA5421BEFF56200DA2984 /* TweetViewController.xib in Resources */,
 				D0042C211BEC4D510012EC67 /* LaunchScreen.storyboard in Resources */,
 				D0042C1E1BEC4D510012EC67 /* Assets.xcassets in Resources */,
 				D02E918B1BEC4FEE00C5FA6A /* LoginViewController.xib in Resources */,
@@ -287,6 +296,7 @@
 				D02E918E1BEC508500C5FA6A /* TwitterClient.m in Sources */,
 				D0042C161BEC4D510012EC67 /* AppDelegate.m in Sources */,
 				D02732781BEC6E5500D08446 /* User.m in Sources */,
+				240BA5411BEFF56200DA2984 /* TweetViewController.m in Sources */,
 				D02732751BEC6E4D00D08446 /* Tweet.m in Sources */,
 				D0042C131BEC4D510012EC67 /* main.m in Sources */,
 				2433066A1BEED89B0004B308 /* TweetCell.m in Sources */,
