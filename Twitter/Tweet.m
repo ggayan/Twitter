@@ -7,20 +7,25 @@
 //
 
 #import "Tweet.h"
+#import "NSDate+DateTools.h"
 
 @implementation Tweet
 
 - (id)initWithDictionary:(NSDictionary *)dictionary {
     self = [super init];
     if (self) {
-        
         self.user = [[User alloc] initWithDictionary:dictionary[@"user"]];
+        self.tweetId = dictionary[@"id_str"];
+        if (dictionary[@"retweeted_status"]) {
+            self.retweet = [[Tweet alloc] initWithDictionary:dictionary[@"retweeted_status"]];
+        };
         self.text = dictionary[@"text"];
-        NSString *createdAtString = dictionary[@"created_at"];
-        NSDateFormatter *formatter = [NSDateFormatter new];
-        formatter.dateFormat = @"EEE MMM d HH:mm:ss Z y";
-        
-        self.createdAt = [formatter dateFromString:createdAtString];
+        self.retweets = [dictionary[@"retweet_count"] stringValue];
+        self.favorites = [dictionary[@"favorite_count"] stringValue];
+        self.createdAt = [NSDate dateWithString:dictionary[@"created_at"] formatString:@"EEE MMM d HH:mm:ss Z y"];
+
+        self.retweeted = [dictionary[@"retweeted"] boolValue];
+        self.favorited = [dictionary[@"favorited"] boolValue];
     }
     return self;
 }

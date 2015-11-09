@@ -22,7 +22,7 @@
                             <constraint firstAttribute="height" constant="73" id="zgG-ru-71j"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="4h" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wqi-oS-ALL">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalCompressionResistancePriority="752" text="4h" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wqi-oS-ALL">
                         <rect key="frame" x="397" y="9" width="13" height="12"/>
                         <animations/>
                         <fontDescription key="fontDescription" type="system" pointSize="10"/>

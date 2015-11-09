@@ -7,5 +7,6 @@ target 'Twitter' do
   pod 'BDBOAuth1Manager'
   pod 'AFNetworking'
   pod 'DateTools'
+  pod 'HexColors'
 end
 

@@ -89,4 +89,59 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
     }];
 }
 
+# pragma mark - Tweet methods
+
+- (void)createTweetWithText:(NSString *)text completion:(void (^)(NSError *error))completion {
+    NSDictionary *params = @{@"status": text};
+
+    [[TwitterClient sharedInstance] POST:@"1.1/statuses/update.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        NSLog(@"Tweet successfuly created");
+        completion(nil);
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        completion(error);
+    }];
+}
+
+- (void)removeTweetId:(NSString *)tweetId completion:(void (^)(NSError *error))completion {
+    NSString *endpoint = [NSString stringWithFormat:@"1.1/statuses/destroy/%@.json", tweetId];
+
+    [self POST:endpoint parameters:nil success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        NSLog(@"Tweet %@ successfuly removed", tweetId);
+        completion(nil);
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        completion(error);
+    }];
+}
+
+- (void)retweetTweetId:(NSString *)tweetId completion:(void (^)(Tweet *retweet, NSError *error))completion {
+    NSString *endpoint = [NSString stringWithFormat:@"1.1/statuses/retweet/%@.json", tweetId];
+
+    [self POST:endpoint parameters:nil success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        NSLog(@"Tweet %@ successfuly retweeted", tweetId);
+        completion([[Tweet alloc] initWithDictionary:responseObject], nil);
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        completion(nil, error);
+    }];
+}
+
+- (void)favoriteTweetId:(NSString *)tweetId completion:(void (^)(NSError *error))completion {
+    NSDictionary *params = @{@"id": tweetId};
+    [self POST:@"1.1/favorites/create.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        NSLog(@"Tweet %@ successfuly favorited", tweetId);
+        completion(nil);
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        completion(error);
+    }];
+}
+
+- (void)removeFavoriteTweetId:(NSString *)tweetId completion:(void (^)(NSError *error))completion {
+    NSDictionary *params = @{@"id": tweetId};
+    [self POST:@"1.1/favorites/destroy.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        NSLog(@"Favorite for tweet %@ successfuly removed", tweetId);
+        completion(nil);
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        completion(error);
+    }];
+}
+
 @end

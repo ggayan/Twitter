@@ -8,6 +8,7 @@
 
 #import "TweetsViewController.h"
 #import "TweetViewController.h"
+#import "NewTweetViewController.h"
 #import "User.h"
 #import "Tweet.h"
 #import "TwitterClient.h"
@@ -73,7 +74,9 @@
 }
 
 - (void)onNew {
-    NSLog(@"New Tweet");
+    NewTweetViewController *ntvc = [[NewTweetViewController alloc] initWithNibName:@"NewTweetViewController" bundle:nil];
+
+    [self.navigationController pushViewController:ntvc animated:YES];
 }
 
 #pragma mark - Table view methods

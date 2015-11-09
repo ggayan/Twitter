@@ -6,9 +6,12 @@
 //  Copyright © 2015 Gabriel Gayan. All rights reserved.
 //
 
+#import "TwitterClient.h"
 #import "TweetViewController.h"
+#import "NewTweetViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "NSDate+DateTools.h"
+#import "HexColors.h"
 
 @interface TweetViewController ()
 
@@ -17,6 +20,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *screenNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *retweetsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *favoritesLabel;
+@property (weak, nonatomic) IBOutlet UIButton *replyButton;
+@property (weak, nonatomic) IBOutlet UIButton *retweetButton;
+@property (weak, nonatomic) IBOutlet UIButton *favoriteButton;
 
 @end
 
@@ -51,9 +59,17 @@
     self.screenNameLabel.text = [NSString stringWithFormat:@"@%@", user.screenName];
 
     self.contentLabel.text = self.tweet.text;
-    [self.contentLabel sizeToFit];
+    self.dateLabel.text = [self.tweet.createdAt formattedDateWithFormat:@"M/dd/yy hh:mm a"];
 
-    self.dateLabel.text = self.tweet.createdAt.timeAgoSinceNow;
+    self.retweetsLabel.text = self.tweet.retweets;
+    self.favoritesLabel.text = self.tweet.favorites;
+
+    [self.contentLabel sizeToFit];
+    [self.retweetsLabel sizeToFit];
+    [self.favoritesLabel sizeToFit];
+
+    [self configureFavoriteButtonColor];
+    [self configureRetweetButtonColor];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -66,17 +82,76 @@
 }
 
 - (void)onReply {
-    NSLog(@"onReply");
+    NewTweetViewController *ntvc = [[NewTweetViewController alloc] initWithNibName:@"NewTweetViewController" bundle:nil];
+    ntvc.initialText = [NSString stringWithFormat:@"@%@ ", self.tweet.user.screenName];
+
+    [self.navigationController pushViewController:ntvc animated:YES];
 }
 
-/*
-#pragma mark - Navigation
+# pragma mark - Button methods
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (IBAction)onReplyButton:(id)sender {
+    [self onReply];
 }
-*/
+
+- (IBAction)onRetweetButton:(id)sender {
+    if (!self.tweet.retweeted) {
+        [[TwitterClient sharedInstance] retweetTweetId:self.tweet.tweetId completion:^(Tweet *retweet, NSError *error) {
+            if (error) {
+                NSLog(@"%@", [error localizedDescription]);
+                return;
+            }
+
+            self.tweet.retweet = retweet;
+            self.tweet.retweeted = YES;
+            [self configureRetweetButtonColor];
+        }];
+    } else {
+        [[TwitterClient sharedInstance] removeTweetId:self.tweet.retweet.tweetId completion:^(NSError *error) {
+            if (error) {
+                NSLog(@"%@", [error localizedDescription]);
+                return;
+            }
+
+            self.tweet.retweeted = NO;
+            self.tweet.retweet = nil;
+            [self configureRetweetButtonColor];
+        }];
+    }
+}
+
+- (IBAction)onLikeButton:(id)sender {
+    void (^toggleFavoriteButton)(NSError *error) = ^void(NSError *error) {
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+            return;
+        }
+
+        self.tweet.favorited = !self.tweet.favorited;
+        [self configureFavoriteButtonColor];
+    };
+
+    if (!self.tweet.favorited) {
+        [[TwitterClient sharedInstance] favoriteTweetId:self.tweet.tweetId completion:toggleFavoriteButton];
+    } else {
+        [[TwitterClient sharedInstance] removeFavoriteTweetId:self.tweet.tweetId completion:toggleFavoriteButton];
+    }
+}
+
+- (void)configureRetweetButtonColor {
+    if (self.tweet.retweeted) {
+        self.retweetButton.tintColor = [UIColor hx_colorWithHexString:@"#19CF86"];
+    } else {
+        self.retweetButton.tintColor = [UIColor hx_colorWithHexString:@"#AAB8C2"];
+    }
+}
+
+- (void)configureFavoriteButtonColor {
+    if (self.tweet.favorited) {
+        self.favoriteButton.tintColor = [UIColor hx_colorWithHexString:@"#19CF86"];
+    } else {
+        self.favoriteButton.tintColor = [UIColor hx_colorWithHexString:@"#AAB8C2"];
+    }
+}
 
 @end
