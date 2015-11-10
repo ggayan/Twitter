@@ -25,10 +25,6 @@ The following **optional** features are implemented:
 - [X] Replies should be prefixed with the username and the reply_id should be set when posting the tweet,
 - [ ] User can load more tweets once they reach the bottom of the feed using infinite loading similar to the actual Twitter client.
 
-The following **additional** features are implemented:
-
-- [ ] List anything else that you can get done to improve the app functionality!
-
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
@@ -39,7 +35,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+I ran into some issues with the Twitter API while working on the infinite loading. It started returning 429 error responses, probably due to the amount of requests that I made while testing this last feature.
 
 ## License
 

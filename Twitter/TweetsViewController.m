@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *tweets;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property (nonatomic) BOOL fetching;
 
 @end
 
@@ -61,6 +62,7 @@
 
     self.tweets = [NSMutableArray new];
 
+    self.fetching = NO;
     [self fetchTweets];
 }
 
@@ -91,6 +93,11 @@
 
     cell.delegate = self;
     cell.tweet = self.tweets[indexPath.row];
+
+//  TODO: test this for infinite scrolling
+//    if (self.tweets.count - indexPath.row < 10) {
+//        [self fetchMoreTweets];
+//    }
 
     return cell;
 }
@@ -185,10 +192,45 @@
 }
 
 - (void)fetchTweets {
+    if(self.fetching) {
+        return;
+    }
+    self.fetching = YES;
+
     [[TwitterClient sharedInstance] homeTimeLineWithParams:nil completion:^(NSArray *tweets, NSError *error) {
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+            self.fetching = NO;
+            return;
+        }
+
         self.tweets = [[NSMutableArray alloc] initWithArray:tweets];
         [self.tableView reloadData];
         [self.refreshControl endRefreshing];
+        self.fetching = NO;
+    }];
+}
+
+
+- (void)fetchMoreTweets {
+    if(self.fetching) {
+        return;
+    }
+    self.fetching = YES;
+
+    Tweet *lastTweet = [self.tweets lastObject];
+    NSDictionary *params = @{@"max_id": lastTweet.tweetId};
+    [[TwitterClient sharedInstance] homeTimeLineWithParams:params completion:^(NSArray *tweets, NSError *error) {
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+            self.fetching = NO;
+            return;
+        }
+
+        [self.tweets addObjectsFromArray:tweets];
+        [self.tableView reloadData];
+        
+        self.fetching = NO;
     }];
 }
 
