@@ -17,8 +17,8 @@
         self.user = [[User alloc] initWithDictionary:dictionary[@"user"]];
         self.tweetId = dictionary[@"id_str"];
         self.text = dictionary[@"text"];
-        self.retweets = [dictionary[@"retweet_count"] stringValue];
-        self.favorites = [dictionary[@"favorite_count"] stringValue];
+        self.retweets = dictionary[@"retweet_count"];
+        self.favorites = dictionary[@"favorite_count"];
         self.createdAt = [NSDate dateWithString:dictionary[@"created_at"] formatString:@"EEE MMM d HH:mm:ss Z y"];
 
         self.retweeted = [dictionary[@"retweeted"] boolValue];

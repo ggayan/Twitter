@@ -61,8 +61,8 @@
     self.contentLabel.text = self.tweet.text;
     self.dateLabel.text = [self.tweet.createdAt formattedDateWithFormat:@"M/dd/yy hh:mm a"];
 
-    self.retweetsLabel.text = self.tweet.retweets;
-    self.favoritesLabel.text = self.tweet.favorites;
+    self.retweetsLabel.text = [self.tweet.retweets stringValue];
+    self.favoritesLabel.text = [self.tweet.favorites stringValue];
 
     [self.contentLabel sizeToFit];
     [self.retweetsLabel sizeToFit];
@@ -104,6 +104,8 @@
 
             self.tweet.retweeted = YES;
             self.tweet.retweetId = retweetId;
+            self.tweet.retweets = @([self.tweet.retweets integerValue] + 1);
+            self.retweetsLabel.text = [self.tweet.retweets stringValue];
             [self configureRetweetButtonColor];
 
         }];
@@ -117,6 +119,8 @@
 
             self.tweet.retweeted = NO;
             self.tweet.retweetId = nil;
+            self.tweet.retweets = @([self.tweet.retweets integerValue] - 1);
+            self.retweetsLabel.text = [self.tweet.retweets stringValue];
             [self configureRetweetButtonColor];
         }];
     }
@@ -130,6 +134,13 @@
         }
 
         self.tweet.favorited = !self.tweet.favorited;
+        if (self.tweet.favorited) {
+            self.tweet.favorites = @([self.tweet.favorites integerValue] + 1);
+        } else {
+            self.tweet.favorites = @([self.tweet.favorites integerValue] - 1);
+        }
+        self.favoritesLabel.text = [self.tweet.favorites stringValue];
+
         [self configureFavoriteButtonColor];
     };
 
