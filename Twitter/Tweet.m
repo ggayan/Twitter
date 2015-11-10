@@ -16,15 +16,23 @@
     if (self) {
         self.user = [[User alloc] initWithDictionary:dictionary[@"user"]];
         self.tweetId = dictionary[@"id_str"];
-        if (dictionary[@"retweeted_status"]) {
-            self.retweet = [[Tweet alloc] initWithDictionary:dictionary[@"retweeted_status"]];
-        };
         self.text = dictionary[@"text"];
         self.retweets = [dictionary[@"retweet_count"] stringValue];
         self.favorites = [dictionary[@"favorite_count"] stringValue];
         self.createdAt = [NSDate dateWithString:dictionary[@"created_at"] formatString:@"EEE MMM d HH:mm:ss Z y"];
 
         self.retweeted = [dictionary[@"retweeted"] boolValue];
+        if (self.retweeted) {
+            if (dictionary[@"retweeted_status"]) {
+                self.originalTweetId = dictionary[@"retweeted_status"][@"id_str"];
+            } else {
+                self.originalTweetId = self.tweetId;
+            }
+        }
+        if (dictionary[@"current_user_retweet"]) {
+            self.retweetId = dictionary[@"current_user_retweet"][@"id_str"];
+        }
+
         self.favorited = [dictionary[@"favorited"] boolValue];
     }
     return self;

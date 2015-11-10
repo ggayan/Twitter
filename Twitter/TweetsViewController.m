@@ -97,9 +97,17 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     TweetViewController *tvc = [[TweetViewController alloc] initWithNibName:@"TweetViewController" bundle:nil];
-    tvc.tweet = self.tweets[indexPath.row];
 
-    [self.navigationController pushViewController:tvc animated:YES];
+    Tweet *cellTweet = self.tweets[indexPath.row];
+    [[TwitterClient sharedInstance] getTweetWithTweetId:cellTweet.tweetId completion:^(Tweet *tweet, NSError *error) {
+        if (error) {
+            NSLog(@"%@", error.localizedDescription);
+            return;
+        }
+
+        tvc.tweet = tweet;
+        [self.navigationController pushViewController:tvc animated:YES];
+    }];
 }
 
 #pragma mark - Private methods

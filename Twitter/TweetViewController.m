@@ -96,25 +96,27 @@
 
 - (IBAction)onRetweetButton:(id)sender {
     if (!self.tweet.retweeted) {
-        [[TwitterClient sharedInstance] retweetTweetId:self.tweet.tweetId completion:^(Tweet *retweet, NSError *error) {
+        [[TwitterClient sharedInstance] retweetTweetId:self.tweet.tweetId completion:^(NSString *retweetId, NSError *error) {
             if (error) {
                 NSLog(@"%@", [error localizedDescription]);
                 return;
             }
 
-            self.tweet.retweet = retweet;
             self.tweet.retweeted = YES;
+            self.tweet.retweetId = retweetId;
             [self configureRetweetButtonColor];
+
         }];
     } else {
-        [[TwitterClient sharedInstance] removeTweetId:self.tweet.retweet.tweetId completion:^(NSError *error) {
+        [[TwitterClient sharedInstance] removeRetweetFromTweet:self.tweet completion:^(NSError *error) {
             if (error) {
+                NSLog(@"could not remove retweet %@", self.tweet.retweetId);
                 NSLog(@"%@", [error localizedDescription]);
                 return;
             }
 
             self.tweet.retweeted = NO;
-            self.tweet.retweet = nil;
+            self.tweet.retweetId = nil;
             [self configureRetweetButtonColor];
         }];
     }

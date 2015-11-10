@@ -12,7 +12,8 @@
 @interface Tweet : NSObject
 
 @property (nonatomic) NSString *tweetId;
-@property (nonatomic) Tweet *retweet;
+@property (nonatomic) NSString *originalTweetId;
+@property (nonatomic) NSString *retweetId;
 @property (nonatomic) NSString *text;
 @property (nonatomic) NSString *retweets;
 @property (nonatomic) NSString *favorites;

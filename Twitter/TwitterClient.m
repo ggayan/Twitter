@@ -91,10 +91,23 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
 
 # pragma mark - Tweet methods
 
+- (void)getTweetWithTweetId:(NSString *)tweetId completion:(void (^)(Tweet *tweet, NSError *error))completion {
+    NSDictionary *params = @{@"include_my_retweet": @"true"};
+    NSString *endpoint = [NSString stringWithFormat:@"1.1/statuses/show/%@.json", tweetId];
+
+    [self GET:endpoint parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        Tweet *tweet = [[Tweet alloc] initWithDictionary:responseObject];
+        NSLog(@"Tweet %@ successfuly fetched", tweet.tweetId);
+        completion(tweet, nil);
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        completion(nil, error);
+    }];
+}
+
 - (void)createTweetWithText:(NSString *)text completion:(void (^)(NSError *error))completion {
     NSDictionary *params = @{@"status": text};
 
-    [[TwitterClient sharedInstance] POST:@"1.1/statuses/update.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+    [self POST:@"1.1/statuses/update.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         NSLog(@"Tweet successfuly created");
         completion(nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
@@ -113,14 +126,29 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
     }];
 }
 
-- (void)retweetTweetId:(NSString *)tweetId completion:(void (^)(Tweet *retweet, NSError *error))completion {
+- (void)retweetTweetId:(NSString *)tweetId completion:(void (^)(NSString *retweetId, NSError *error))completion {
     NSString *endpoint = [NSString stringWithFormat:@"1.1/statuses/retweet/%@.json", tweetId];
 
     [self POST:endpoint parameters:nil success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         NSLog(@"Tweet %@ successfuly retweeted", tweetId);
-        completion([[Tweet alloc] initWithDictionary:responseObject], nil);
+        completion(responseObject[@"id_str"], nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         completion(nil, error);
+    }];
+}
+
+- (void)removeRetweetFromTweet:(Tweet *)tweet completion:(void (^)(NSError *error))completion {
+    [self getTweetWithTweetId:tweet.originalTweetId completion:^(Tweet *tweet, NSError *error) {
+        if (error) {
+            completion(error);
+            return;
+        }
+
+        if (tweet.retweetId == nil) {
+            return;
+        }
+
+        [self removeTweetId:tweet.retweetId completion:completion];
     }];
 }
 
