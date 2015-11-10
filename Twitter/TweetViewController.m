@@ -84,6 +84,7 @@
 - (void)onReply {
     NewTweetViewController *ntvc = [[NewTweetViewController alloc] initWithNibName:@"NewTweetViewController" bundle:nil];
     ntvc.initialText = [NSString stringWithFormat:@"@%@ ", self.tweet.user.screenName];
+    ntvc.replyingTweetId = self.tweet.tweetId;
 
     [self.navigationController pushViewController:ntvc animated:YES];
 }

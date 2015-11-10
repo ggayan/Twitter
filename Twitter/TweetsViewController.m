@@ -14,10 +14,10 @@
 #import "TwitterClient.h"
 #import "TweetCell.h"
 
-@interface TweetsViewController () <UITableViewDataSource, UITableViewDelegate, TweetCellDelegate>
+@interface TweetsViewController () <UITableViewDataSource, UITableViewDelegate, TweetCellDelegate, NewTweetViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic) NSArray *tweets;
+@property (nonatomic) NSMutableArray *tweets;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 @end
@@ -59,7 +59,7 @@
     [self.refreshControl addTarget:self action:@selector(onRefresh) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex: 0];
 
-    self.tweets = @[];
+    self.tweets = [NSMutableArray new];
 
     [self fetchTweets];
 }
@@ -75,6 +75,7 @@
 
 - (void)onNew {
     NewTweetViewController *ntvc = [[NewTweetViewController alloc] initWithNibName:@"NewTweetViewController" bundle:nil];
+    ntvc.delegate = self;
 
     [self.navigationController pushViewController:ntvc animated:YES];
 }
@@ -116,6 +117,8 @@
 - (void)TweetCell:(TweetCell *)cell didPushReplyWithTweet:(Tweet *)tweet {
     NewTweetViewController *ntvc = [[NewTweetViewController alloc] initWithNibName:@"NewTweetViewController" bundle:nil];
     ntvc.initialText = [NSString stringWithFormat:@"@%@ ", tweet.user.screenName];
+    ntvc.replyingTweetId = tweet.tweetId;
+    ntvc.delegate = self;
 
     [self.navigationController pushViewController:ntvc animated:YES];
 }
@@ -167,6 +170,14 @@
     }
 }
 
+#pragma mark - New tweet controller delegate methods
+
+- (void)newTweetCreated:(Tweet *)tweet {
+    NSLog(@"tweet received");
+    [self.tweets insertObject:tweet atIndex:0];
+    [self.tableView reloadData];
+}
+
 #pragma mark - Private methods
 
 - (void)onRefresh {
@@ -175,7 +186,7 @@
 
 - (void)fetchTweets {
     [[TwitterClient sharedInstance] homeTimeLineWithParams:nil completion:^(NSArray *tweets, NSError *error) {
-        self.tweets = tweets;
+        self.tweets = [[NSMutableArray alloc] initWithArray:tweets];
         [self.tableView reloadData];
         [self.refreshControl endRefreshing];
     }];

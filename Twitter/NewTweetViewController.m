@@ -63,12 +63,13 @@
 }
 
 - (void)onTweet {
-    [[TwitterClient sharedInstance] createTweetWithText:self.textView.text completion:^(NSError *error) {
+    [[TwitterClient sharedInstance] createTweetWithText:self.textView.text replyingTweetId:self.replyingTweetId completion:^(Tweet *tweet, NSError *error) {
         if (error) {
             NSLog(@"%@",[error localizedDescription]);
             return;
         }
 
+        [self.delegate newTweetCreated:tweet];
         [[self navigationController] popViewControllerAnimated:YES];
     }];
 }
