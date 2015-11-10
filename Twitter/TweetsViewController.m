@@ -14,7 +14,7 @@
 #import "TwitterClient.h"
 #import "TweetCell.h"
 
-@interface TweetsViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface TweetsViewController () <UITableViewDataSource, UITableViewDelegate, TweetCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSArray *tweets;
@@ -88,6 +88,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TweetCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TweetCell"];
 
+    cell.delegate = self;
     cell.tweet = self.tweets[indexPath.row];
 
     return cell;
@@ -108,6 +109,62 @@
         tvc.tweet = tweet;
         [self.navigationController pushViewController:tvc animated:YES];
     }];
+}
+
+#pragma mark - Cell delegate methods
+
+- (void)TweetCell:(TweetCell *)cell didPushReplyWithTweet:(Tweet *)tweet {
+    NewTweetViewController *ntvc = [[NewTweetViewController alloc] initWithNibName:@"NewTweetViewController" bundle:nil];
+    ntvc.initialText = [NSString stringWithFormat:@"@%@ ", tweet.user.screenName];
+
+    [self.navigationController pushViewController:ntvc animated:YES];
+}
+
+
+- (void)TweetCell:(TweetCell *)cell didPushRetweetWithTweet:(Tweet *)tweet {
+    if (!tweet.retweeted) {
+        [[TwitterClient sharedInstance] retweetTweetId:tweet.tweetId completion:^(NSString *retweetId, NSError *error) {
+            if (error) {
+                NSLog(@"%@", [error localizedDescription]);
+                return;
+            }
+
+            NSLog(@"retweet successful, tweet id %@", retweetId);
+            tweet.retweeted = YES;
+            tweet.retweetId = retweetId;
+            cell.tweet = tweet;
+        }];
+    } else {
+        [[TwitterClient sharedInstance] removeRetweetFromTweet:tweet completion:^(NSError *error) {
+            if (error) {
+                NSLog(@"could not remove retweet %@", tweet.retweetId);
+                NSLog(@"%@", [error localizedDescription]);
+                return;
+            }
+
+            tweet.retweeted = NO;
+            tweet.retweetId = nil;
+            cell.tweet = tweet;
+        }];
+    }
+}
+
+- (void)TweetCell:(TweetCell *)cell didPushFavoriteWithTweet:(Tweet *)tweet {
+    void (^toggleFavoriteButton)(NSError *error) = ^void(NSError *error) {
+        if (error) {
+            NSLog(@"%@", [error localizedDescription]);
+            return;
+        }
+
+        tweet.favorited = !tweet.favorited;
+        cell.tweet = tweet;
+    };
+
+    if (!tweet.favorited) {
+        [[TwitterClient sharedInstance] favoriteTweetId:tweet.tweetId completion:toggleFavoriteButton];
+    } else {
+        [[TwitterClient sharedInstance] removeFavoriteTweetId:tweet.tweetId completion:toggleFavoriteButton];
+    }
 }
 
 #pragma mark - Private methods

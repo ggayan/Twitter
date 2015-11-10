@@ -11,6 +11,9 @@
 #import "User.h"
 #import "UIImageView+AFNetworking.h"
 #import "NSDate+DateTools.h"
+#import "TwitterClient.h"
+#import "HexColors.h"
+#import "NewTweetViewController.h"
 
 @interface TweetCell ()
 
@@ -19,6 +22,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *screenNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (weak, nonatomic) IBOutlet UIButton *replyButton;
+@property (weak, nonatomic) IBOutlet UIButton *retweetButton;
+@property (weak, nonatomic) IBOutlet UIButton *favoriteButton;
 
 @end
 
@@ -42,6 +48,39 @@
     [self.contentLabel sizeToFit];
 
     self.dateLabel.text = tweet.createdAt.shortTimeAgoSinceNow;
+    [self configureRetweetButtonColor];
+    [self configureFavoriteButtonColor];
 }
+
+# pragma mark - Button methods
+
+- (IBAction)onReplyButton:(id)sender {
+    [self.delegate TweetCell:self didPushReplyWithTweet:self.tweet];
+}
+
+- (IBAction)onRetweetButton:(id)sender {
+    [self.delegate TweetCell:self didPushRetweetWithTweet:self.tweet];
+}
+
+- (IBAction)onLikeButton:(id)sender {
+    [self.delegate TweetCell:self didPushFavoriteWithTweet:self.tweet];
+}
+
+- (void)configureRetweetButtonColor {
+    if (self.tweet.retweeted) {
+        self.retweetButton.tintColor = [UIColor hx_colorWithHexString:@"#19CF86"];
+    } else {
+        self.retweetButton.tintColor = [UIColor hx_colorWithHexString:@"#AAB8C2"];
+    }
+}
+
+- (void)configureFavoriteButtonColor {
+    if (self.tweet.favorited) {
+        self.favoriteButton.tintColor = [UIColor hx_colorWithHexString:@"#19CF86"];
+    } else {
+        self.favoriteButton.tintColor = [UIColor hx_colorWithHexString:@"#AAB8C2"];
+    }
+}
+
 
 @end
