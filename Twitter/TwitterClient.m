@@ -11,6 +11,7 @@
 
 NSString * const kTwitterConsumerKey = @"Xi4Ha2FVzixcEId3OJlJlJCpB";
 NSString * const kTwitterConsumerSecret = @"jmBHiNpiCp8zhgk6pKGwVPkMnMVUseDb9ixLdZNOSUEzGMY8wo";
+// These api keys are no longer valid so don't try anything funny :)
 NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
 
 @interface TwitterClient()
