@@ -22,8 +22,12 @@
         self.createdAt = [NSDate dateWithString:dictionary[@"created_at"] formatString:@"EEE MMM d HH:mm:ss Z y"];
 
         self.retweeted = [dictionary[@"retweeted"] boolValue];
-        if (self.retweeted && dictionary[@"retweeted_status"]) {
-            self.originalTweetId = dictionary[@"retweeted_status"][@"id_str"];
+        if (self.retweeted) {
+            if (dictionary[@"retweeted_status"]) {
+                self.originalTweetId = dictionary[@"retweeted_status"][@"id_str"];
+            } else {
+                self.originalTweetId = self.tweetId;
+            }
         } else {
             self.originalTweetId = self.tweetId;
         }
