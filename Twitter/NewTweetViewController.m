@@ -10,11 +10,12 @@
 #import "UIImageView+AFNetworking.h"
 #import "TwitterClient.h"
 
-@interface NewTweetViewController ()
+@interface NewTweetViewController () <UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *screenNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *remainingTextLabel;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
 @end
@@ -38,6 +39,7 @@
                                     action:@selector(onTweet)
      ];
 
+
     self.profileImageView.layer.cornerRadius = 3;
     self.profileImageView.clipsToBounds = YES;
 
@@ -48,6 +50,8 @@
     self.screenNameLabel.text = user.screenName;
 
     self.textView.text = self.initialText ? self.initialText : @"";
+    self.textView.delegate = self;
+    self.remainingTextLabel.text = [@(140 - [self.textView.text length]) stringValue];
     [self.textView becomeFirstResponder];
 }
 
@@ -72,6 +76,12 @@
         [self.delegate newTweetCreated:tweet];
         [[self navigationController] popViewControllerAnimated:YES];
     }];
+}
+
+#pragma mark - Textview methods
+
+- (void)textViewDidChange:(UITextView *)textView {
+    self.remainingTextLabel.text = [@(140 - [self.textView.text length]) stringValue];
 }
 
 @end
