@@ -96,31 +96,28 @@
 }
 
 - (IBAction)onRetweetButton:(id)sender {
-    if (!self.tweet.retweeted) {
-        [[TwitterClient sharedInstance] retweetTweetId:self.tweet.tweetId completion:^(NSString *retweetId, NSError *error) {
+    if (self.tweet.retweeted) {
+        [[TwitterClient sharedInstance] removeRetweetFromTweetId:self.tweet.tweetId completion:^(NSError *error) {
+            if (error) {
+                NSLog(@"could not remove retweet for tweet %@", self.tweet.tweetId);
+                NSLog(@"%@", [error localizedDescription]);
+                return;
+            }
+
+            self.tweet.retweeted = NO;
+            self.tweet.retweets = @([self.tweet.retweets integerValue] - 1);
+            self.retweetsLabel.text = [self.tweet.retweets stringValue];
+            [self configureRetweetButtonColor];
+        }];
+    } else {
+        [[TwitterClient sharedInstance] retweetTweetId:self.tweet.tweetId completion:^(NSError *error) {
             if (error) {
                 NSLog(@"%@", [error localizedDescription]);
                 return;
             }
 
             self.tweet.retweeted = YES;
-            self.tweet.retweetId = retweetId;
             self.tweet.retweets = @([self.tweet.retweets integerValue] + 1);
-            self.retweetsLabel.text = [self.tweet.retweets stringValue];
-            [self configureRetweetButtonColor];
-
-        }];
-    } else {
-        [[TwitterClient sharedInstance] removeRetweetFromTweet:self.tweet completion:^(NSError *error) {
-            if (error) {
-                NSLog(@"could not remove retweet %@", self.tweet.retweetId);
-                NSLog(@"%@", [error localizedDescription]);
-                return;
-            }
-
-            self.tweet.retweeted = NO;
-            self.tweet.retweetId = nil;
-            self.tweet.retweets = @([self.tweet.retweets integerValue] - 1);
             self.retweetsLabel.text = [self.tweet.retweets stringValue];
             [self configureRetweetButtonColor];
         }];

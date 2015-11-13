@@ -37,6 +37,7 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
     return instance;
 }
 
+# pragma mark - Login methods
 
 - (void)loginWithCompletion:(void (^)(User *user, NSError *error))completion {
     self.loginCompletion= completion;
@@ -81,6 +82,8 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
 
 }
 
+# pragma mark- Timeline
+
 - (void)homeTimeLineWithParams:(NSDictionary *)params completion:(void (^)(NSArray *tweets, NSError *error))completion {
     [self GET:@"1.1/statuses/home_timeline.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         NSArray *tweets = [Tweet tweetsWithArray:responseObject];
@@ -93,17 +96,19 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
 # pragma mark - Tweet methods
 
 - (void)getTweetWithTweetId:(NSString *)tweetId completion:(void (^)(Tweet *tweet, NSError *error))completion {
-    NSDictionary *params = @{@"include_my_retweet": @"true"};
+    NSDictionary *params = @{@"include_my_retweet": @1};
     NSString *endpoint = [NSString stringWithFormat:@"1.1/statuses/show/%@.json", tweetId];
 
     [self GET:endpoint parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         Tweet *tweet = [[Tweet alloc] initWithDictionary:responseObject];
-        NSLog(@"Tweet %@ successfuly fetched", tweet.tweetId);
+        NSLog(@"Tweet %@ successfully fetched", tweet.tweetId);
         completion(tweet, nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         completion(nil, error);
     }];
 }
+
+# pragma mark - Create tweet methods
 
 - (void)createTweetWithText:(NSString *)text completion:(void (^)(Tweet *tweet, NSError *error))completion {
     [self createTweetWithText:text replyingTweetId:nil completion:completion];
@@ -117,7 +122,7 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
     }
 
     [self POST:@"1.1/statuses/update.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        NSLog(@"Tweet successfuly created");
+        NSLog(@"Tweet successfully created");
         completion([[Tweet alloc] initWithDictionary:responseObject], nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         completion(nil, error);
@@ -128,43 +133,55 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
     NSString *endpoint = [NSString stringWithFormat:@"1.1/statuses/destroy/%@.json", tweetId];
 
     [self POST:endpoint parameters:nil success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        NSLog(@"Tweet %@ successfuly removed", tweetId);
+        NSLog(@"Tweet %@ successfully removed", tweetId);
         completion(nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         completion(error);
     }];
 }
 
-- (void)retweetTweetId:(NSString *)tweetId completion:(void (^)(NSString *retweetId, NSError *error))completion {
+
+# pragma mark - Retweet methods
+
+- (void)retweetTweetId:(NSString *)tweetId completion:(void (^)(NSError *error))completion {
     NSString *endpoint = [NSString stringWithFormat:@"1.1/statuses/retweet/%@.json", tweetId];
 
     [self POST:endpoint parameters:nil success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        NSLog(@"Tweet %@ successfuly retweeted", tweetId);
-        completion(responseObject[@"id_str"], nil);
+        NSLog(@"Tweet %@ successfully retweeted", tweetId);
+        completion(nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
-        completion(nil, error);
+        completion(error);
     }];
 }
 
-- (void)removeRetweetFromTweet:(Tweet *)tweet completion:(void (^)(NSError *error))completion {
-    [self getTweetWithTweetId:tweet.originalTweetId completion:^(Tweet *tweet, NSError *error) {
+- (void)removeRetweetFromTweetId:(NSString *)tweetId completion:(void (^)(NSError *error))completion {
+    [self getTweetWithTweetId:tweetId completion:^(Tweet *refreshedTweet, NSError *error) {
         if (error) {
             completion(error);
             return;
         }
 
-        if (tweet.retweetId == nil) {
-            return;
-        }
+        [self getTweetWithTweetId:refreshedTweet.originalTweetId completion:^(Tweet *originalTweet, NSError *error) {
+            if (error) {
+                completion(error);
+                return;
+            }
 
-        [self removeTweetId:tweet.retweetId completion:completion];
+            if (!originalTweet.retweeted || originalTweet.retweetId == nil) {
+                return;
+            }
+            
+            [self removeTweetId:originalTweet.retweetId completion:completion];
+        }];
     }];
 }
+
+# pragma mark - Favorite tweet methods
 
 - (void)favoriteTweetId:(NSString *)tweetId completion:(void (^)(NSError *error))completion {
     NSDictionary *params = @{@"id": tweetId};
     [self POST:@"1.1/favorites/create.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        NSLog(@"Tweet %@ successfuly favorited", tweetId);
+        NSLog(@"Tweet %@ successfully favorited", tweetId);
         completion(nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         completion(error);
@@ -174,7 +191,7 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
 - (void)removeFavoriteTweetId:(NSString *)tweetId completion:(void (^)(NSError *error))completion {
     NSDictionary *params = @{@"id": tweetId};
     [self POST:@"1.1/favorites/destroy.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
-        NSLog(@"Favorite for tweet %@ successfuly removed", tweetId);
+        NSLog(@"Favorite for tweet %@ successfully removed", tweetId);
         completion(nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
         completion(error);

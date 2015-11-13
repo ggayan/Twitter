@@ -20,26 +20,11 @@
         self.retweets = dictionary[@"retweet_count"];
         self.favorites = dictionary[@"favorite_count"];
         self.createdAt = [NSDate dateWithString:dictionary[@"created_at"] formatString:@"EEE MMM d HH:mm:ss Z y"];
-
-        self.retweeted = [dictionary[@"retweeted"] boolValue];
-        if (self.retweeted) {
-            if (dictionary[@"retweeted_status"]) {
-                self.originalTweetId = dictionary[@"retweeted_status"][@"id_str"];
-            } else {
-                self.originalTweetId = self.tweetId;
-            }
-        } else {
-            self.originalTweetId = self.tweetId;
-        }
-        if (dictionary[@"current_user_retweet"]) {
-            self.retweetId = dictionary[@"current_user_retweet"][@"id_str"];
-        }
-
         self.favorited = [dictionary[@"favorited"] boolValue];
+        [self configureRetweetedStatus:dictionary];
     }
     return self;
 }
-
 
 + (NSArray *)tweetsWithArray:(NSArray *)array {
     NSMutableArray *tweets = [NSMutableArray array];
@@ -49,6 +34,20 @@
     }
 
     return tweets;
+}
+
+- (void)configureRetweetedStatus:(NSDictionary *)dictionary {
+    self.retweeted = [dictionary[@"retweeted"] boolValue];
+
+    if (self.retweeted && dictionary[@"retweeted_status"]) {
+        self.originalTweetId = dictionary[@"retweeted_status"][@"id_str"];
+    } else {
+        self.originalTweetId = self.tweetId;
+    }
+
+    if (dictionary[@"current_user_retweet"]) {
+        self.retweetId = dictionary[@"current_user_retweet"][@"id_str"];
+    }
 }
 
 @end

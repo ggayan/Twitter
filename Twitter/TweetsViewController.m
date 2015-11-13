@@ -94,10 +94,10 @@
     cell.delegate = self;
     cell.tweet = self.tweets[indexPath.row];
 
-//  TODO: test this for infinite scrolling
-//    if (self.tweets.count - indexPath.row < 10) {
-//        [self fetchMoreTweets];
-//    }
+    //  TODO: test this for infinite scrolling
+    //    if (self.tweets.count - indexPath.row < 10) {
+    //        [self fetchMoreTweets];
+    //    }
 
     return cell;
 }
@@ -132,20 +132,8 @@
 
 
 - (void)TweetCell:(TweetCell *)cell didPushRetweetWithTweet:(Tweet *)tweet {
-    if (!tweet.retweeted) {
-        [[TwitterClient sharedInstance] retweetTweetId:tweet.tweetId completion:^(NSString *retweetId, NSError *error) {
-            if (error) {
-                NSLog(@"%@", [error localizedDescription]);
-                return;
-            }
-
-            NSLog(@"retweet successful, tweet id %@", retweetId);
-            tweet.retweeted = YES;
-            tweet.retweetId = retweetId;
-            cell.tweet = tweet;
-        }];
-    } else {
-        [[TwitterClient sharedInstance] removeRetweetFromTweet:tweet completion:^(NSError *error) {
+    if (tweet.retweeted) {
+        [[TwitterClient sharedInstance] removeRetweetFromTweetId:tweet.tweetId completion:^(NSError *error) {
             if (error) {
                 NSLog(@"could not remove retweet %@", tweet.retweetId);
                 NSLog(@"%@", [error localizedDescription]);
@@ -153,8 +141,19 @@
             }
 
             tweet.retweeted = NO;
-            tweet.retweetId = nil;
-            cell.tweet = tweet;
+            tweet.retweets = @([tweet.retweets integerValue] - 1);
+            [self.tableView reloadData];
+        }];
+    } else {
+        [[TwitterClient sharedInstance] retweetTweetId:tweet.tweetId completion:^(NSError *error) {
+            if (error) {
+                NSLog(@"%@", [error localizedDescription]);
+                return;
+            }
+
+            tweet.retweeted = YES;
+            tweet.retweets = @([tweet.retweets integerValue] + 1);
+            [self.tableView reloadData];
         }];
     }
 }
@@ -167,7 +166,7 @@
         }
 
         tweet.favorited = !tweet.favorited;
-        cell.tweet = tweet;
+        [self.tableView reloadData];
     };
 
     if (!tweet.favorited) {
@@ -229,7 +228,7 @@
 
         [self.tweets addObjectsFromArray:tweets];
         [self.tableView reloadData];
-        
+
         self.fetching = NO;
     }];
 }
