@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TweetsViewController : UIViewController
+@interface TimelineViewController : UIViewController
+
+@property (nonatomic) BOOL useMentions;
 
 @end

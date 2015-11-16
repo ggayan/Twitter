@@ -8,6 +8,7 @@
 
 #import "TwitterClient.h"
 #import "Tweet.h"
+#import "User.h"
 
 NSString * const kTwitterConsumerKey = @"Xi4Ha2FVzixcEId3OJlJlJCpB";
 NSString * const kTwitterConsumerSecret = @"jmBHiNpiCp8zhgk6pKGwVPkMnMVUseDb9ixLdZNOSUEzGMY8wo";
@@ -82,10 +83,35 @@ NSString * const kTwitterBaseUrl = @"https://api.twitter.com";
 
 }
 
-# pragma mark- Timeline
+# pragma mark - Timeline
 
 - (void)homeTimeLineWithParams:(NSDictionary *)params completion:(void (^)(NSArray *tweets, NSError *error))completion {
     [self GET:@"1.1/statuses/home_timeline.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        NSArray *tweets = [Tweet tweetsWithArray:responseObject];
+        completion(tweets, nil);
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        completion(nil, error);
+    }];
+}
+
+- (void)mentionsTimeLineWithParams:(NSDictionary *)params completion:(void (^)(NSArray *tweets, NSError *error))completion {
+    [self GET:@"1.1/statuses/mentions_timeline.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+        NSArray *tweets = [Tweet tweetsWithArray:responseObject];
+        completion(tweets, nil);
+    } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {
+        completion(nil, error);
+    }];
+}
+
+# pragma mark - User Timeline
+
+- (void)userTimeLineWithUserId:(NSString *)userId completion:(void (^)(NSArray *tweets, NSError *error))completion {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if (userId) {
+        params[@"user_id"] = userId;
+    }
+
+    [self GET:@"1.1/statuses/user_timeline.json" parameters:params success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
         NSArray *tweets = [Tweet tweetsWithArray:responseObject];
         completion(tweets, nil);
     } failure:^(AFHTTPRequestOperation * _Nonnull operation, NSError * _Nonnull error) {

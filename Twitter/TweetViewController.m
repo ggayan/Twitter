@@ -36,18 +36,26 @@
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
-    self.navigationItem.leftBarButtonItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"Home"
-                                     style:UIBarButtonItemStylePlain
-                                    target:self
-                                    action:@selector(onHome)
-     ];
-    self.navigationItem.rightBarButtonItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"Reply"
-                                     style:UIBarButtonItemStylePlain
-                                    target:self
-                                    action:@selector(onReply)
-     ];
+    self.navigationController.navigationBar.barTintColor = [UIColor hx_colorWithHexString:@"55ACEE"];
+    [self.navigationController.navigationBar
+     setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+    self.navigationController.navigationBar.translucent = NO;
+
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(onBack)
+                                   ];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Reply"
+                                                                    style:UIBarButtonItemStylePlain
+                                                                   target:self
+                                                                   action:@selector(onReply)
+                                    ];
+
+    leftButton.tintColor = [UIColor whiteColor];
+    rightButton.tintColor = [UIColor whiteColor];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    self.navigationItem.rightBarButtonItem = rightButton;
 
     self.profileImageView.layer.cornerRadius = 3;
     self.profileImageView.clipsToBounds = YES;
@@ -77,7 +85,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)onHome {
+- (void)onBack {
     [[self navigationController] popViewControllerAnimated:YES];
 }
 

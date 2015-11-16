@@ -33,7 +33,8 @@
 - (void)awakeFromNib {
     self.profileImageView.layer.cornerRadius = 3;
     self.profileImageView.clipsToBounds = YES;
-
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onImageTapped:)];
+    [self.profileImageView addGestureRecognizer:tapRecognizer];
 }
 
 - (void) setTweet:(Tweet *)tweet {
@@ -65,6 +66,14 @@
 - (IBAction)onLikeButton:(id)sender {
     [self.delegate TweetCell:self didPushFavoriteWithTweet:self.tweet];
 }
+
+# pragma mark - Image tapped method
+
+- (IBAction)onImageTapped:(id)sender {
+        [self.delegate TweetCell:self didTapProfileImageWithTweet:self.tweet];
+}
+
+# pragma mark - Private methods
 
 - (void)configureRetweetButtonColor {
     if (self.tweet.retweeted) {

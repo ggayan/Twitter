@@ -24,10 +24,20 @@ NSString * const UserDidLogoutNotification = @"UserDidLogoutNotification";
     self = [super init];
     if (self) {
         self.dictionary = dictionary;
+        self.userId = dictionary[@"id_str"];
         self.name = dictionary[@"name"];
         self.screenName = dictionary[@"screen_name"];
-        self.profileImageUrl = [[NSURL alloc] initWithString:dictionary[@"profile_image_url_https"]];
+        if (dictionary[@"profile_banner_url"]) {
+            self.profileBannerUrl = [[NSURL alloc] initWithString:dictionary[@"profile_banner_url"]];
+        }
+        if (dictionary[@"profile_image_url_https"]) {
+            NSString *highResUrl = [dictionary[@"profile_image_url_https"] stringByReplacingOccurrencesOfString:@"_normal.png" withString:@".png"];
+            self.profileImageUrl = [[NSURL alloc] initWithString:highResUrl];
+        }
         self.tagline = dictionary[@"description"];
+        self.tweets = dictionary[@"statuses_count"];
+        self.following = dictionary[@"friends_count"];
+        self.followers = dictionary[@"followers_count"];
     }
     return self;
 }

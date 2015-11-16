@@ -7,7 +7,7 @@
 //
 
 #import "LoginViewController.h"
-#import "TweetsViewController.h"
+#import "HamburgerViewController.h"
 #import "TwitterClient.h"
 
 
@@ -21,8 +21,8 @@
     [[TwitterClient sharedInstance] loginWithCompletion:^(User *user, NSError *error) {
         if (user != nil) {
             NSLog(@"Welcome %@", user.name);
-            UIViewController *tvc = [[UINavigationController alloc] initWithRootViewController:[TweetsViewController new]];
-            [self presentViewController:tvc animated:YES completion:nil];
+            HamburgerViewController *hvc = [HamburgerViewController new];
+            [self presentViewController:hvc animated:YES completion:nil];
         } else {
             // Present error view
         }

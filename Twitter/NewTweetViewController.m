@@ -9,6 +9,7 @@
 #import "NewTweetViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "TwitterClient.h"
+#import "HexColors.h"
 
 @interface NewTweetViewController () <UITextViewDelegate>
 
@@ -26,19 +27,26 @@
     [super viewDidLoad];
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
-    self.navigationItem.leftBarButtonItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
-                                     style:UIBarButtonItemStylePlain
-                                    target:self
-                                    action:@selector(onCancel)
-     ];
-    self.navigationItem.rightBarButtonItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"Tweet"
-                                     style:UIBarButtonItemStylePlain
-                                    target:self
-                                    action:@selector(onTweet)
-     ];
+    self.navigationController.navigationBar.barTintColor = [UIColor hx_colorWithHexString:@"55ACEE"];
+    [self.navigationController.navigationBar
+     setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+    self.navigationController.navigationBar.translucent = NO;
 
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(onCancel)
+                                   ];;
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Tweet"
+                                                                    style:UIBarButtonItemStylePlain
+                                                                   target:self
+                                                                   action:@selector(onTweet)
+                                    ];;
+
+    leftButton.tintColor = [UIColor whiteColor];
+    rightButton.tintColor = [UIColor whiteColor];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    self.navigationItem.rightBarButtonItem = rightButton;
 
     self.profileImageView.layer.cornerRadius = 3;
     self.profileImageView.clipsToBounds = YES;

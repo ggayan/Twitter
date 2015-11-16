@@ -6,15 +6,17 @@
 //  Copyright © 2015 Gabriel Gayan. All rights reserved.
 //
 
-#import "TweetsViewController.h"
+#import "TimelineViewController.h"
 #import "TweetViewController.h"
 #import "NewTweetViewController.h"
+#import "ProfileViewController.h"
 #import "User.h"
 #import "Tweet.h"
 #import "TwitterClient.h"
 #import "TweetCell.h"
+#import "HexColors.h"
 
-@interface TweetsViewController () <UITableViewDataSource, UITableViewDelegate, TweetCellDelegate, NewTweetViewControllerDelegate>
+@interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate, TweetCellDelegate, NewTweetViewControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *tweets;
@@ -23,7 +25,7 @@
 
 @end
 
-@implementation TweetsViewController
+@implementation TimelineViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -33,18 +35,27 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
 
-    self.navigationItem.leftBarButtonItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"Sign Out"
-                                     style:UIBarButtonItemStylePlain
-                                    target:self
-                                    action:@selector(onLogout)
-     ];
-    self.navigationItem.rightBarButtonItem =
-    [[UIBarButtonItem alloc] initWithTitle:@"New"
-                                     style:UIBarButtonItemStylePlain
-                                    target:self
-                                    action:@selector(onNew)
-     ];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationController.navigationBar.barTintColor = [UIColor hx_colorWithHexString:@"55ACEE"];
+    [self.navigationController.navigationBar
+     setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+    self.navigationController.navigationBar.translucent = NO;
+
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:@"Logout"
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(onLogout)
+                                   ];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"New"
+                                                                    style:UIBarButtonItemStylePlain
+                                                                   target:self
+                                                                   action:@selector(onNew)
+                                    ];
+
+    leftButton.tintColor = [UIColor whiteColor];
+    rightButton.tintColor = [UIColor whiteColor];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    self.navigationItem.rightBarButtonItem = rightButton;
 
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -176,6 +187,12 @@
     }
 }
 
+- (void)TweetCell:(TweetCell *)cell didTapProfileImageWithTweet:(Tweet *)tweet {
+    ProfileViewController *pvc = [ProfileViewController new];
+    pvc.user = tweet.user;
+    [self.navigationController pushViewController:pvc animated:YES];
+}
+
 #pragma mark - New tweet controller delegate methods
 
 - (void)newTweetCreated:(Tweet *)tweet {
@@ -196,18 +213,33 @@
     }
     self.fetching = YES;
 
-    [[TwitterClient sharedInstance] homeTimeLineWithParams:nil completion:^(NSArray *tweets, NSError *error) {
-        if (error) {
-            NSLog(@"%@", [error localizedDescription]);
-            self.fetching = NO;
-            return;
-        }
+    if (self.useMentions) {
+        [[TwitterClient sharedInstance] mentionsTimeLineWithParams:nil completion:^(NSArray *tweets, NSError *error) {
+            if (error) {
+                NSLog(@"%@", [error localizedDescription]);
+                self.fetching = NO;
+                return;
+            }
 
-        self.tweets = [[NSMutableArray alloc] initWithArray:tweets];
-        [self.tableView reloadData];
-        [self.refreshControl endRefreshing];
-        self.fetching = NO;
-    }];
+            self.tweets = [[NSMutableArray alloc] initWithArray:tweets];
+            [self.tableView reloadData];
+            [self.refreshControl endRefreshing];
+            self.fetching = NO;
+        }];
+    } else {
+        [[TwitterClient sharedInstance] homeTimeLineWithParams:nil completion:^(NSArray *tweets, NSError *error) {
+            if (error) {
+                NSLog(@"%@", [error localizedDescription]);
+                self.fetching = NO;
+                return;
+            }
+
+            self.tweets = [[NSMutableArray alloc] initWithArray:tweets];
+            [self.tableView reloadData];
+            [self.refreshControl endRefreshing];
+            self.fetching = NO;
+        }];
+    }
 }
 
 

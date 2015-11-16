@@ -7,8 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "HamburgerViewController.h"
 #import "LoginViewController.h"
-#import "TweetsViewController.h"
 #import "TwitterClient.h"
 #import "User.h"
 #import "Tweet.h"
@@ -28,14 +28,16 @@
     User *user = [User currentUser];
     if (user != nil) {
         NSLog(@"Welcome %@", user.name);
-        self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[TweetsViewController new]];
+
+        HamburgerViewController *hvc = [HamburgerViewController new];
+        self.window.rootViewController = hvc;
     } else {
         NSLog(@"Not logged in");
         self.window.rootViewController = [LoginViewController new];
     }
 
     [self.window makeKeyAndVisible];
-    
+
     return YES;
 }
 
