@@ -96,8 +96,8 @@
                                     <action selector="onRetweetButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="n49-WV-oda"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Eg-c3-7Uu">
-                                <rect key="frame" x="32" y="8" width="20.5" height="14.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QBx-N7-ANZ">
+                                <rect key="frame" x="237" y="8" width="20.5" height="14.5"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -110,21 +110,11 @@
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QBx-N7-ANZ">
-                                <rect key="frame" x="237" y="8" width="20.5" height="14.5"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="0Eg-c3-7Uu" firstAttribute="centerY" secondItem="0HN-1E-AXG" secondAttribute="centerY" id="8uj-pN-1dA"/>
                             <constraint firstItem="l0J-nB-Zot" firstAttribute="centerY" secondItem="pRl-dp-qkd" secondAttribute="centerY" id="Ap2-V3-M3U"/>
-                            <constraint firstItem="0Eg-c3-7Uu" firstAttribute="leading" secondItem="0HN-1E-AXG" secondAttribute="trailing" id="ETN-vL-fEe"/>
-                            <constraint firstItem="l0J-nB-Zot" firstAttribute="leading" secondItem="0Eg-c3-7Uu" secondAttribute="trailing" constant="50" id="Gyx-As-IGb"/>
                             <constraint firstItem="0HN-1E-AXG" firstAttribute="top" secondItem="pRl-dp-qkd" secondAttribute="top" id="Oc4-v8-GcV"/>
                             <constraint firstItem="FH8-bX-9IM" firstAttribute="leading" secondItem="l0J-nB-Zot" secondAttribute="trailing" id="PP6-z6-JuV"/>
                             <constraint firstItem="0HN-1E-AXG" firstAttribute="centerY" secondItem="pRl-dp-qkd" secondAttribute="centerY" id="PuU-nK-xYu"/>
@@ -134,6 +124,7 @@
                             <constraint firstAttribute="height" constant="32" id="iId-9W-luN"/>
                             <constraint firstItem="v1G-hW-Xlc" firstAttribute="centerY" secondItem="pRl-dp-qkd" secondAttribute="centerY" id="jyH-ID-c1M"/>
                             <constraint firstItem="QBx-N7-ANZ" firstAttribute="centerY" secondItem="v1G-hW-Xlc" secondAttribute="centerY" id="pHC-jI-HFF"/>
+                            <constraint firstItem="l0J-nB-Zot" firstAttribute="leading" secondItem="0HN-1E-AXG" secondAttribute="trailing" constant="70" id="rdm-8O-MhZ"/>
                             <constraint firstItem="v1G-hW-Xlc" firstAttribute="leading" secondItem="FH8-bX-9IM" secondAttribute="trailing" constant="50" id="uL6-q0-Jge"/>
                         </constraints>
                     </view>
@@ -164,10 +155,12 @@
                 <outlet property="contentLabel" destination="0xK-OO-PMA" id="RRK-4i-kbt"/>
                 <outlet property="dateLabel" destination="Wqi-oS-ALL" id="7E5-6d-JcE"/>
                 <outlet property="favoriteButton" destination="v1G-hW-Xlc" id="T0R-9f-orf"/>
+                <outlet property="favoritesLabel" destination="QBx-N7-ANZ" id="Tr2-qZ-yfW"/>
                 <outlet property="nameLabel" destination="0CB-0h-b6I" id="elB-qj-FqD"/>
                 <outlet property="profileImageView" destination="w8T-WO-yEj" id="YTL-bU-j6I"/>
                 <outlet property="replyButton" destination="0HN-1E-AXG" id="Lm7-CD-mKh"/>
                 <outlet property="retweetButton" destination="l0J-nB-Zot" id="PTg-68-H5I"/>
+                <outlet property="retweetsLabel" destination="FH8-bX-9IM" id="tQu-1H-Ulo"/>
                 <outlet property="screenNameLabel" destination="P9u-Qa-bvA" id="Gdi-SB-5Gr"/>
             </connections>
             <point key="canvasLocation" x="710" y="336"/>

@@ -22,6 +22,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *screenNameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *retweetsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *favoritesLabel;
 @property (weak, nonatomic) IBOutlet UIButton *replyButton;
 @property (weak, nonatomic) IBOutlet UIButton *retweetButton;
 @property (weak, nonatomic) IBOutlet UIButton *favoriteButton;
@@ -49,6 +51,8 @@
     [self.contentLabel sizeToFit];
 
     self.dateLabel.text = tweet.createdAt.shortTimeAgoSinceNow;
+    self.retweetsLabel.text = [self.tweet.retweets stringValue];
+    self.favoritesLabel.text = [self.tweet.favorites stringValue];
     [self configureRetweetButtonColor];
     [self configureFavoriteButtonColor];
 }
